@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 # Replace with your GitHub App credentials
 CLIENT_ID = "Ov23liwdZCJXYwgCRNRZ"
-CLIENT_SECRET = "your_client_secret_here"
+CLIENT_SECRET = "ad6a3c0d8842f0a463f86999152484cda646977e"
 
 @app.route('/auth/github/callback')
 def github_callback():
