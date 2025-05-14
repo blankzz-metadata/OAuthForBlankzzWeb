@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app, origins=["https://blankzz.codeberg.page"])  # Allow frontend origin only
 
-# Replace with your GitHub App credentials
 CLIENT_ID = "Ov23liwdZCJXYwgCRNRZ"
 CLIENT_SECRET = "ad6a3c0d8842f0a463f86999152484cda646977e"
 
@@ -13,7 +14,6 @@ def github_callback():
     if not code:
         return jsonify({"error": "Missing code"}), 400
 
-    # Step 1: Exchange code for access token
     token_res = requests.post(
         "https://github.com/login/oauth/access_token",
         headers={"Accept": "application/json"},
@@ -25,10 +25,10 @@ def github_callback():
     )
     token_json = token_res.json()
     access_token = token_json.get("access_token")
+
     if not access_token:
         return jsonify({"error": "Failed to get access token"}), 400
 
-    # Step 2: Get user info
     user_res = requests.get(
         "https://api.github.com/user",
         headers={"Authorization": f"Bearer {access_token}"}
@@ -46,10 +46,3 @@ def github_callback():
         "login": user_data.get("login"),
         "email": primary_email or user_data.get("email")
     })
-
-@app.route('/')
-def home():
-    return "GitHub Auth Backend is running!"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
